@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPMB SMP Muslimin Cililin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #4CAF50 75%, #81C784 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(76, 175, 80, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(30, 60, 114, 0.3) 0%, transparent 50%);
+            z-index: -1;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(1deg); }
+        }
+
+        /* Login Page Styles */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            animation: slideUp 1s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .school-logo {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #1e3c72 0%, #4CAF50 100%);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .school-title {
+            margin-bottom: 30px;
+        }
+
+        .school-title h1 {
+            color: #1e3c72;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+
+        .school-title h2 {
+            color: #4CAF50;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            line-height: 1.2;
+        }
+
+        .login-form {
+            text-align: left;
+            margin-top: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #1e3c72 0%, #4CAF50 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(76, 175, 80, 0.4);
+        }
+
+        .login-error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        /* Main App Styles */
+        .app-container {
+            display: none;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.8s ease-out;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #4CAF50 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        .header-logo {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .header h1 {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 5px;
+            font-size: 24px;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .header h2 {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 5px;
+            font-size: 20px;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+        
+        .header p {
+            position: relative;
+            z-index: 2;
+            opacity: 0.8;
+            font-size: 16px;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            z-index: 3;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .nav {
+            display: flex;
+            background: rgba(248, 249, 250, 0.9);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(222, 226, 230, 0.5);
+            flex-wrap: wrap;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .nav-btn {
+            flex: 1;
+            padding: 20px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 700;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            color: #495057;
+            min-width: 160px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #1e3c72, #4CAF50, #81C784);
+            transition: all 0.4s ease;
+            transform: translateX(-50%);
+            border-radius: 2px 2px 0 0;
+        }
+        
+        .nav-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(30, 60, 114, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            color: #4CAF50;
+            transform: translateY(-3px);
+        }
+        
+        .nav-btn:hover::before {
+            width: 80%;
+        }
+        
+        .nav-btn:hover::after {
+            opacity: 1;
+        }
+        
+        .nav-btn.active {
+            background: linear-gradient(135deg, #1e3c72 0%, #4CAF50 100%);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(30, 60, 114, 0.3);
+        }
+        
+        .nav-btn.active::before {
+            width: 100%;
+            background: rgba(255,255,255,0.4);
+        }
+        
+        .nav-btn.active::after {
+            opacity: 0;
+        }
+        
+        .page {
+            display: none;
+            padding: 35px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+        
+        .page.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .form-group {
+            margin: 15px 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #495057;
+        }
+        
+        .required {
+            color: #dc3545;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.15);
+            transform: translateY(-2px);
+            background: white;
+        }
+        
+        input:hover, select:hover, textarea:hover {
+            border-color: #ced4da;
+            transform: translateY(-1px);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #1e3c72 0%, #4CAF50 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(76, 175, 80, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(40, 167, 69, 0.4);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+            color: #212529;
+            box-shadow: 0 8px 25px rgba(255, 193, 7, 0.3);
+        }
+        
+        .btn-warning:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(255, 193, 7, 0.4);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(220, 53, 69, 0.4);
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .data-table th {
+            background: linear-gradient(135deg, #1e3c72 0%, #4CAF50 100%);
+            color: white;
+            padding: 18px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .data-table td {
+            padding: 15px 18px;
+            border-bottom: 1px solid rgba(222, 226, 230, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .data-table tr:hover {
+            background: linear-gradient(135deg, rgba(30, 60, 114, 0.05) 0%, rgba(76, 175, 80, 0.05) 100%);
+            transform: scale(1.01);
+        }
+        
+        .stats {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            flex: 1;
+            background: linear-gradient(135deg, #1e3c72 0%, #4CAF50 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            min-width: 200px;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+            transform: scale(0);
+            transition: transform 0.6s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(30, 60, 114, 0.3);
+        }
+        
+        .stat-card:hover::before {
+            transform: scale(1);
+        }
+        
+        .stat-card:nth-child(2) {
+            background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
+        }
+        
+        .stat-card:nth-child(3) {
+            background: linear-gradient(135deg, #2196F3 0%, #64B5F6 100%);
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+        
+        .alert-success {
+            background: linear-gradient(135deg, #d1ecf1 0%, #d4edda 100%);
+            color: #155724;
+            border: 2px solid #bee5eb;
+            border-radius: 15px;
+            padding: 18px;
+            animation: slideDown 0.5s ease-out;
+            box-shadow: 0 8px 25px rgba(21, 87, 36, 0.1);
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .search-box {
+            margin: 20px 0;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .stats {
+                flex-direction: column;
+            }
+            
+            .data-table {
+                font-size: 12px;
+                overflow-x: auto;
+            }
+            
+            .nav {
+                flex-direction: column;
+            }
+
+            .nav-btn {
+                min-width: auto;
+            }
+
+            .search-box {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box input {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-page" id="loginPage">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="school-logo">🏫</div>
+                <div class="school-title">
+                    <h1>YAYASAN PENDIDIKAN MUSLIMIN (YPM) NURUL ULUM</h1>
+                    <h2>SEKOLAH MENENGAH PERTAMA MUSLIMIN CILILIN</h2>
+                </div>
+                
+                <form class="login-form" id="loginForm">
+                    <div id="loginError" class="login-error">
+                        Username atau password salah!
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="username" placeholder="Masukkan username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="password" placeholder="Masukkan password" required>
+                    </div>
+                    
+                    <button type="submit" class="login-btn">🔐 Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div class="app-container" id="appContainer">
+        <div class="container">
+            <div class="header">
+                <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+                <div class="header-logo">🏫</div>
+                <h1>SEKOLAH MENENGAH PERTAMA MUSLIMIN CILILIN</h1>
+                <h2>Sistem Penerimaan Siswa Baru (SPMB)</h2>
+                <p>Tahun Ajaran <span id="currentYear"></span></p>
+            </div>
+            
+            <div class="nav">
+                <button class="nav-btn active" onclick="showPage('form')">📝 Form Pendaftaran</button>
+                <button class="nav-btn" onclick="showPage('list')">📋 Data Pendaftar</button>
+                <button class="nav-btn" onclick="showPage('stats')">📊 Laporan Statistik</button>
+            </div>
+            
+            <!-- Form Input Data -->
+            <div class="page active" id="form">
+                <h2>📝 Form Pendaftaran Calon Siswa Baru</h2>
+                <div id="successMessage" class="alert alert-success" style="display: none;">
+                    ✅ Data berhasil disimpan!
+                </div>
+                
+                <form id="studentForm">
+                    <div class="form-group">
+                        <label>Nama Lengkap <span class="required">*</span></label>
+                        <input type="text" id="nama" placeholder="Masukkan nama lengkap sesuai akta kelahiran" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Jenis Kelamin <span class="required">*</span></label>
+                            <select id="jenisKelamin" required>
+                                <option value="">Pilih Jenis Kelamin...</option>
+                                <option value="Laki-laki">Laki-laki</option>
+                                <option value="Perempuan">Perempuan</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tempat Lahir <span class="required">*</span></label>
+                            <input type="text" id="tempatLahir" placeholder="Contoh: Bandung" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Tanggal Lahir <span class="required">*</span></label>
+                        <input type="date" id="tanggalLahir" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Alamat Lengkap <span class="required">*</span></label>
+                        <textarea id="alamat" rows="3" placeholder="Masukkan alamat lengkap tempat tinggal saat ini" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Nama Orang Tua/Wali <span class="required">*</span></label>
+                        <input type="text" id="namaOrtu" placeholder="Nama lengkap orang tua/wali" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>No. HP Orang Tua <span class="required">*</span></label>
+                        <input type="tel" id="hpOrtu" placeholder="Contoh: 08123456789" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Asal Sekolah SD/MI <span class="required">*</span></label>
+                        <input type="text" id="asalSekolah" placeholder="Contoh: SDN 01 Cililin" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>NISN</label>
+                        <input type="text" id="nisn" placeholder="Nomor Induk Siswa Nasional (10 digit)" maxlength="10">
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button type="button" class="btn btn-warning" onclick="resetForm()">🔄 Reset Form</button>
+                        <button type="submit" class="btn btn-primary">💾 Daftar Sekarang</button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Daftar Pendaftar -->
+            <div class="page" id="list">
+                <h2>📋 Daftar Calon Siswa Baru</h2>
+                
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="🔍 Cari nama siswa...">
+                    <button class="btn btn-success" onclick="exportToExcel()">📊 Export Excel</button>
+                </div>
+                
+                <table class="data-table" id="studentTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Lengkap</th>
+                            <th>Jenis Kelamin</th>
+                            <th>Tempat, Tanggal Lahir</th>
+                            <th>Asal Sekolah</th>
+                            <th>No. HP Ortu</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBody">
+                        <!-- Data akan ditambahkan via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Statistik -->
+            <div class="page" id="stats">
+                <h2>📊 Statistik Pendaftaran</h2>
+                
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalPendaftar">0</div>
+                        <div>Total Pendaftar</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="lakiLaki">0</div>
+                        <div>Laki-laki</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="perempuan">0</div>
+                        <div>Perempuan</div>
+                    </div>
+                </div>
+                
+                <div style="background: rgba(248, 249, 250, 0.8); padding: 20px; border-radius: 15px; margin: 20px 0; backdrop-filter: blur(10px);">
+                    <h3>📈 Ringkasan Pendaftaran</h3>
+                    <div id="schoolStats">
+                        <p>Belum ada data pendaftaran</p>
+                    </div>
+                </div>
+                
+                <div style="text-align: center;">
+                    <button class="btn btn-success" onclick="exportToExcel()">📊 Export Semua Data ke Excel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Data storage
+        let students = [];
+        
+        // Get current academic year
+        function getCurrentAcademicYear() {
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth(); // 0-11
+            
+            if (currentMonth >= 6) { // July onwards
+                return `${currentYear}/${currentYear + 1}`;
+            } else {
+                return `${currentYear - 1}/${currentYear}`;
+            }
+        }
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current year on page load
+            const yearSpan = document.getElementById('currentYear');
+            if (yearSpan) {
+                yearSpan.textContent = getCurrentAcademicYear();
+            }
+            
+            // Set minimum date for birth date (max 18 years old)
+            const today = new Date();
+            const maxDate = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
+            const minDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+            
+            const dateInput = document.getElementById('tanggalLahir');
+            if (dateInput) {
+                dateInput.max = maxDate.toISOString().split('T')[0];
+                dateInput.min = minDate.toISOString().split('T')[0];
+            }
+            
+            // Focus on username field
+            const usernameInput = document.getElementById('username');
+            if (usernameInput) {
+                usernameInput.focus();
+            }
+            
+            // Login functionality
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const username = document.getElementById('username').value;
+                    const password = document.getElementById('password').value;
+                    
+                    if (username === 'admin' && password === 'admin') {
+                        // Hide login page and show main app
+                        document.getElementById('loginPage').style.display = 'none';
+                        document.getElementById('appContainer').style.display = 'block';
+                        
+                        // Set current academic year
+                        const yearSpan = document.getElementById('currentYear');
+                        if (yearSpan) {
+                            yearSpan.textContent = getCurrentAcademicYear();
+                        }
+                        
+                        // Update stats on login
+                        updateStats();
+                        
+                    } else {
+                        // Show error message
+                        const errorDiv = document.getElementById('loginError');
+                        if (errorDiv) {
+                            errorDiv.style.display = 'block';
+                            setTimeout(() => {
+                                errorDiv.style.display = 'none';
+                            }, 3000);
+                        }
+                    }
+                });
+            }
+            
+            // Handle student form submission
+            const studentForm = document.getElementById('studentForm');
+            if (studentForm) {
+                studentForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Validate NISN if provided
+                    const nisn = document.getElementById('nisn').value;
+                    if (nisn && nisn.length !== 10) {
+                        alert('NISN harus terdiri dari 10 digit angka');
+                        return;
+                    }
+                    
+                    // Validate phone number
+                    const hpOrtu = document.getElementById('hpOrtu').value;
+                    if (!/^08[0-9]{8,11}$/.test(hpOrtu)) {
+                        alert('Format nomor HP tidak valid. Gunakan format: 08xxxxxxxxx');
+                        return;
+                    }
+                    
+                    const newStudent = {
+                        nama: document.getElementById('nama').value,
+                        jenisKelamin: document.getElementById('jenisKelamin').value,
+                        tempatLahir: document.getElementById('tempatLahir').value,
+                        tanggalLahir: document.getElementById('tanggalLahir').value,
+                        alamat: document.getElementById('alamat').value,
+                        namaOrtu: document.getElementById('namaOrtu').value,
+                        hpOrtu: hpOrtu,
+                        asalSekolah: document.getElementById('asalSekolah').value,
+                        nisn: nisn || '-',
+                        tanggalDaftar: new Date().toLocaleDateString('id-ID')
+                    };
+                    
+                    students.push(newStudent);
+                    
+                    // Show success message
+                    const successMsg = document.getElementById('successMessage');
+                    if (successMsg) {
+                        successMsg.style.display = 'block';
+                        setTimeout(() => {
+                            successMsg.style.display = 'none';
+                        }, 3000);
+                    }
+                    
+                    // Reset form
+                    this.reset();
+                    
+                    // Here you would normally save to Google Sheets
+                    console.log('Data siswa baru:', newStudent);
+                });
+            }
+            
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const rows = document.querySelectorAll('#studentTableBody tr');
+                    
+                    rows.forEach(row => {
+                        if (row.cells.length > 1) { // Skip empty state row
+                            const nama = row.cells[1].textContent.toLowerCase();
+                            const sekolah = row.cells[4].textContent.toLowerCase();
+                            if (nama.includes(searchTerm) || sekolah.includes(searchTerm)) {
+                                row.style.display = '';
+                            } else {
+                                row.style.display = 'none';
+                            }
+                        }
+                    });
+                });
+            }
+        });
+        
+        function logout() {
+            if (confirm('Yakin ingin logout?')) {
+                document.getElementById('loginPage').style.display = 'block';
+                document.getElementById('appContainer').style.display = 'none';
+                const loginForm = document.getElementById('loginForm');
+                if (loginForm) {
+                    loginForm.reset();
+                }
+            }
+        }
+        
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Remove active class from nav buttons
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected page
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+            
+            // Add active class to clicked button
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+            
+            // Update data when showing list or stats
+            if (pageId === 'list') {
+                updateTable();
+            } else if (pageId === 'stats') {
+                updateStats();
+            }
+        }
+        
+        function resetForm() {
+            if (confirm('Yakin ingin mengosongkan semua form?')) {
+                const studentForm = document.getElementById('studentForm');
+                if (studentForm) {
+                    studentForm.reset();
+                }
+            }
+        }
+        
+        function updateTable() {
+            const tbody = document.getElementById('studentTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            if (students.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #666;">Belum ada data pendaftar</td></tr>';
+                return;
+            }
+            
+            students.forEach((student, index) => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td><strong>${student.nama}</strong></td>
+                    <td>${student.jenisKelamin}</td>
+                    <td>${student.tempatLahir}, ${formatDate(student.tanggalLahir)}</td>
+                    <td>${student.asalSekolah}</td>
+                    <td>${student.hpOrtu}</td>
+                    <td>
+                        <button class="btn btn-danger" onclick="deleteStudent(${index})" title="Hapus data">🗑️</button>
+                    </td>
+                `;
+            });
+        }
+        
+        function deleteStudent(index) {
+            if (confirm('Yakin ingin menghapus data siswa "' + students[index].nama + '"?')) {
+                students.splice(index, 1);
+                updateTable();
+                updateStats();
+            }
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            return date.toLocaleDateString('id-ID', options);
+        }
+        
+        function updateStats() {
+            const total = students.length;
+            const lakiLaki = students.filter(s => s.jenisKelamin === 'Laki-laki').length;
+            const perempuan = students.filter(s => s.jenisKelamin === 'Perempuan').length;
+            
+            const totalEl = document.getElementById('totalPendaftar');
+            const lakiLakiEl = document.getElementById('lakiLaki');
+            const perempuanEl = document.getElementById('perempuan');
+            
+            if (totalEl) totalEl.textContent = total;
+            if (lakiLakiEl) lakiLakiEl.textContent = lakiLaki;
+            if (perempuanEl) perempuanEl.textContent = perempuan;
+            
+            // Update school statistics
+            const schoolStats = document.getElementById('schoolStats');
+            if (!schoolStats) return;
+            
+            if (total === 0) {
+                schoolStats.innerHTML = '<p style="color: #666; font-style: italic;">Belum ada data pendaftaran</p>';
+            } else {
+                // Group by school
+                const schoolCounts = {};
+                students.forEach(student => {
+                    schoolCounts[student.asalSekolah] = (schoolCounts[student.asalSekolah] || 0) + 1;
+                });
+                
+                // Sort by count
+                const sortedSchools = Object.entries(schoolCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5); // Top 5 schools
+                
+                let statsHTML = '<h4>📚 Asal Sekolah Terbanyak:</h4>';
+                sortedSchools.forEach(([school, count]) => {
+                    statsHTML += `<div style="margin: 8px 0; padding: 8px; background: rgba(76, 175, 80, 0.1); border-radius: 8px;">
+                        <strong>${school}:</strong> ${count} siswa
+                    </div>`;
+                });
+                
+                schoolStats.innerHTML = statsHTML;
+            }
+        }
+        
+        function exportToExcel() {
+            if (students.length === 0) {
+                alert('Tidak ada data untuk di-export');
+                return;
+            }
+            
+            // Create CSV content
+            let csvContent = "No,Nama Lengkap,Jenis Kelamin,Tempat Lahir,Tanggal Lahir,Alamat,Nama Orang Tua,No HP Orang Tua,Asal Sekolah,NISN,Tanggal Daftar\n";
+            
+            students.forEach((student, index) => {
+                csvContent += `${index + 1},"${student.nama}","${student.jenisKelamin}","${student.tempatLahir}","${formatDate(student.tanggalLahir)}","${student.alamat}","${student.namaOrtu}","${student.hpOrtu}","${student.asalSekolah}","${student.nisn}","${student.tanggalDaftar}"\n`;
+            });
+            
+            // Create and download file
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `data_ppdb_smp_muslimin_${getCurrentAcademicYear().replace('/', '-')}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            alert(`🎉 Data berhasil di-export!\n\nFile: data_ppdb_smp_muslimin_${getCurrentAcademicYear().replace('/', '-')}.csv\nTotal: ${students.length} siswa`);
+        }
+        
+        // Add some sample data for demo (remove in production)
+        /*
+        students = [
+            {
+                nama: "Ahmad Rizky Pratama",
+                jenisKelamin: "Laki-laki",
+                tempatLahir: "Bandung",
+                tanggalLahir: "2010-03-15",
+                alamat: "Jl. Raya Cililin No. 123, Cililin",
+                namaOrtu: "Budi Pratama",
+                hpOrtu: "08123456789",
+                asalSekolah: "SDN 01 Cililin",
+                nisn: "0051234567",
+                tanggalDaftar: "10/08/2025"
+            },
+            {
+                nama: "Siti Nurhaliza",
+                jenisKelamin: "Perempuan",
+                tempatLahir: "Bandung Barat",
+                tanggalLahir: "2010-07-22",
+                alamat: "Jl. Warung Awi No. 456, Bongas",
+                namaOrtu: "Ibu Sari",
+                hpOrtu: "08187654321",
+                asalSekolah: "MI Al-Ikhlas Cililin",
+                nisn: "0057654321",
+                tanggalDaftar: "09/08/2025"
+            }
+        ];
+        */
+    </script>
+</body>
+</html>
