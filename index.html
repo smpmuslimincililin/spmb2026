@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPMB SMP Muslimin Cililin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
     <style>
+        /* CSS yang sudah ada - TIDAK DIUBAH */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #4CAF50 75%, #81C784 100%);
@@ -18,8 +22,9 @@
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
+            color: #333;
         }
-        
+
         body::before {
             content: '';
             position: fixed;
@@ -27,16 +32,23 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
+            background:
                 radial-gradient(circle at 20% 80%, rgba(76, 175, 80, 0.2) 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(30, 60, 114, 0.3) 0%, transparent 50%);
             z-index: -1;
             animation: float 8s ease-in-out infinite;
         }
-        
+
         @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(1deg); }
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(1deg);
+            }
         }
 
         /* Login Page Styles */
@@ -53,7 +65,7 @@
             backdrop-filter: blur(20px);
             border-radius: 20px;
             padding: 40px;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.3);
             max-width: 450px;
             width: 100%;
@@ -62,8 +74,15 @@
         }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .school-logo {
@@ -78,7 +97,7 @@
             font-size: 40px;
             color: white;
             font-weight: bold;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
         .school-title {
@@ -134,6 +153,29 @@
             transform: translateY(-2px);
         }
 
+        /* PASSWORD VISIBILITY TOGGLE - NEW */
+        .password-container {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            color: #4CAF50;
+        }
+
         .login-btn {
             width: 100%;
             padding: 15px;
@@ -146,6 +188,12 @@
             cursor: pointer;
             transition: all 0.4s ease;
             margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
         }
 
         .login-btn:hover {
@@ -153,16 +201,86 @@
             box-shadow: 0 15px 35px rgba(76, 175, 80, 0.4);
         }
 
-        .login-error {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
+        .login-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
         }
 
-        /* Main App Styles */
+        /* LOGIN ERROR MESSAGES - IMPROVED */
+        .login-error {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+            border-left: 4px solid #dc3545;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .login-error.show {
+            display: block;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-10px);
+            }
+
+            75% {
+                transform: translateX(10px);
+            }
+        }
+
+        .login-success {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+            border-left: 4px solid #28a745;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* LOADING INDICATOR - NEW */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Main App Styles - TIDAK DIUBAH */
         .app-container {
             display: none;
         }
@@ -173,14 +291,14 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.2);
             animation: slideUp 0.8s ease-out;
             margin-top: 20px;
             margin-bottom: 20px;
         }
-        
+
         .header {
             background: linear-gradient(135deg, #1e3c72 0%, #4CAF50 100%);
             color: white;
@@ -189,7 +307,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .header::before {
             content: '';
             position: absolute;
@@ -197,7 +315,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
             animation: rotate 20s linear infinite;
         }
 
@@ -214,14 +332,14 @@
             position: relative;
             z-index: 2;
         }
-        
+
         .header h1 {
             position: relative;
             z-index: 2;
             margin-bottom: 5px;
             font-size: 24px;
             font-weight: 700;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .header h2 {
@@ -232,7 +350,7 @@
             font-weight: 600;
             opacity: 0.9;
         }
-        
+
         .header p {
             position: relative;
             z-index: 2;
@@ -253,26 +371,48 @@
             font-size: 12px;
             z-index: 3;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .logout-btn:hover {
             background: rgba(255, 255, 255, 0.3);
         }
-        
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+
+        /* SESSION INFO - NEW */
+        .session-info {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            z-index: 3;
+            backdrop-filter: blur(10px);
         }
-        
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
         .nav {
             display: flex;
             background: rgba(248, 249, 250, 0.9);
             backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(222, 226, 230, 0.5);
             flex-wrap: wrap;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
-        
+
         .nav-btn {
             flex: 1;
             padding: 20px;
@@ -287,8 +427,12 @@
             min-width: 160px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        
+
         .nav-btn::before {
             content: '';
             position: absolute;
@@ -301,7 +445,7 @@
             transform: translateX(-50%);
             border-radius: 2px 2px 0 0;
         }
-        
+
         .nav-btn::after {
             content: '';
             position: absolute;
@@ -313,69 +457,76 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-        
+
         .nav-btn:hover {
             color: #4CAF50;
             transform: translateY(-3px);
         }
-        
+
         .nav-btn:hover::before {
             width: 80%;
         }
-        
+
         .nav-btn:hover::after {
             opacity: 1;
         }
-        
+
         .nav-btn.active {
             background: linear-gradient(135deg, #1e3c72 0%, #4CAF50 100%);
             color: white;
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(30, 60, 114, 0.3);
         }
-        
+
         .nav-btn.active::before {
             width: 100%;
-            background: rgba(255,255,255,0.4);
+            background: rgba(255, 255, 255, 0.4);
         }
-        
+
         .nav-btn.active::after {
             opacity: 0;
         }
-        
+
         .page {
             display: none;
             padding: 35px;
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
         }
-        
+
         .page.active {
             display: block;
             animation: fadeIn 0.3s ease;
         }
-        
+
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
-        
+
         .form-group {
             margin: 15px 0;
         }
-        
+
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: 500;
             color: #495057;
         }
-        
+
         .required {
             color: #dc3545;
         }
-        
-        input, select, textarea {
+
+        input,
+        select,
+        textarea {
             width: 100%;
             padding: 15px;
             border: 2px solid #e9ecef;
@@ -385,29 +536,33 @@
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
         }
-        
-        input:focus, select:focus, textarea:focus {
+
+        input:focus,
+        select:focus,
+        textarea:focus {
             outline: none;
             border-color: #4CAF50;
             box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.15);
             transform: translateY(-2px);
             background: white;
         }
-        
-        input:hover, select:hover, textarea:hover {
+
+        input:hover,
+        select:hover,
+        textarea:hover {
             border-color: #ced4da;
             transform: translateY(-1px);
         }
-        
+
         .form-row {
             display: flex;
             gap: 15px;
         }
-        
+
         .form-row .form-group {
             flex: 1;
         }
-        
+
         .btn {
             padding: 15px 30px;
             border: none;
@@ -419,8 +574,11 @@
             margin: 8px;
             position: relative;
             overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
-        
+
         .btn::before {
             content: '';
             position: absolute;
@@ -433,56 +591,67 @@
             transform: translate(-50%, -50%);
             transition: width 0.6s, height 0.6s;
         }
-        
+
         .btn:hover::before {
             width: 300px;
             height: 300px;
         }
-        
+
         .btn-primary {
             background: linear-gradient(135deg, #1e3c72 0%, #4CAF50 100%);
             color: white;
             box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
         }
-        
+
         .btn-primary:hover {
             transform: translateY(-3px);
             box-shadow: 0 15px 35px rgba(76, 175, 80, 0.4);
         }
-        
+
         .btn-success {
             background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
             color: white;
             box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
         }
-        
+
         .btn-success:hover {
             transform: translateY(-3px);
             box-shadow: 0 15px 35px rgba(40, 167, 69, 0.4);
         }
-        
+
         .btn-warning {
             background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
             color: #212529;
             box-shadow: 0 8px 25px rgba(255, 193, 7, 0.3);
         }
-        
+
         .btn-warning:hover {
             transform: translateY(-3px);
             box-shadow: 0 15px 35px rgba(255, 193, 7, 0.4);
         }
-        
+
         .btn-danger {
             background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
             color: white;
             box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
         }
-        
+
         .btn-danger:hover {
             transform: translateY(-3px);
             box-shadow: 0 15px 35px rgba(220, 53, 69, 0.4);
         }
-        
+
+        .btn-info {
+            background: linear-gradient(135deg, #17a2b8 0%, #5bc0de 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(23, 162, 184, 0.3);
+        }
+
+        .btn-info:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(23, 162, 184, 0.4);
+        }
+
         .data-table {
             width: 100%;
             border-collapse: collapse;
@@ -491,10 +660,10 @@
             backdrop-filter: blur(10px);
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        
+
         .data-table th {
             background: linear-gradient(135deg, #1e3c72 0%, #4CAF50 100%);
             color: white;
@@ -505,25 +674,25 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        
+
         .data-table td {
             padding: 15px 18px;
             border-bottom: 1px solid rgba(222, 226, 230, 0.5);
             transition: all 0.3s ease;
         }
-        
+
         .data-table tr:hover {
             background: linear-gradient(135deg, rgba(30, 60, 114, 0.05) 0%, rgba(76, 175, 80, 0.05) 100%);
             transform: scale(1.01);
         }
-        
+
         .stats {
             display: flex;
             gap: 15px;
             margin: 20px 0;
             flex-wrap: wrap;
         }
-        
+
         .stat-card {
             flex: 1;
             background: linear-gradient(135deg, #1e3c72 0%, #4CAF50 100%);
@@ -537,7 +706,7 @@
             cursor: pointer;
             min-width: 200px;
         }
-        
+
         .stat-card::before {
             content: '';
             position: absolute;
@@ -545,40 +714,40 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
             transform: scale(0);
             transition: transform 0.6s ease;
         }
-        
+
         .stat-card:hover {
             transform: translateY(-10px) scale(1.05);
             box-shadow: 0 20px 40px rgba(30, 60, 114, 0.3);
         }
-        
+
         .stat-card:hover::before {
             transform: scale(1);
         }
-        
+
         .stat-card:nth-child(2) {
             background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
         }
-        
+
         .stat-card:nth-child(3) {
             background: linear-gradient(135deg, #2196F3 0%, #64B5F6 100%);
         }
-        
+
         .stat-number {
             font-size: 32px;
             font-weight: bold;
             margin-bottom: 5px;
         }
-        
+
         .alert {
             padding: 15px;
             border-radius: 12px;
             margin: 15px 0;
         }
-        
+
         .alert-success {
             background: linear-gradient(135deg, #d1ecf1 0%, #d4edda 100%);
             color: #155724;
@@ -588,12 +757,19 @@
             animation: slideDown 0.5s ease-out;
             box-shadow: 0 8px 25px rgba(21, 87, 36, 0.1);
         }
-        
+
         @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        
+
         .search-box {
             margin: 20px 0;
             display: flex;
@@ -601,21 +777,150 @@
             align-items: center;
             flex-wrap: wrap;
         }
-        
+
+        /* BACKUP STATUS - NEW */
+        .backup-status {
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%);
+            border: 2px solid #bee5eb;
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .backup-status.success {
+            background: linear-gradient(135deg, #d4edda 0%, #e8f5e8 100%);
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .backup-status.warning {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border-color: #ffc107;
+            color: #856404;
+        }
+
+        .backup-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #28a745;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 10px;
+        }
+
+        .pagination button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #1e3c72 0%, #4CAF50 100%);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .pagination button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .pagination span {
+            padding: 8px 16px;
+            font-weight: bold;
+        }
+
+        /* Loading Indicator */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* TOAST NOTIFICATION - NEW */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
+        }
+
+        .toast.warning {
+            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+            color: #212529;
+        }
+
+        /* Responsiveness */
         @media (max-width: 768px) {
             .form-row {
                 flex-direction: column;
             }
-            
+
             .stats {
                 flex-direction: column;
             }
-            
+
             .data-table {
                 font-size: 12px;
                 overflow-x: auto;
             }
-            
+
             .nav {
                 flex-direction: column;
             }
@@ -633,71 +938,157 @@
                 width: 100%;
                 margin-bottom: 10px;
             }
+
+            .login-card {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .header h2 {
+                font-size: 16px;
+            }
+
+            .page {
+                padding: 20px 15px;
+            }
+
+            .stat-card {
+                min-width: 100%;
+            }
+
+            .session-info {
+                position: static;
+                margin: 10px 0;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 18px;
+            }
+
+            .header h2 {
+                font-size: 16px;
+            }
+
+            .page {
+                padding: 20px 15px;
+            }
+
+            .stat-card {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
+
 <body>
-    <!-- Login Page -->
     <div class="login-page" id="loginPage">
         <div class="login-container">
             <div class="login-card">
-                <div class="school-logo">🏫</div>
+                <div class="school-logo">
+                    <i class="fas fa-school"></i>
+                </div>
                 <div class="school-title">
                     <h1>YAYASAN PENDIDIKAN MUSLIMIN (YPM) NURUL ULUM</h1>
                     <h2>SEKOLAH MENENGAH PERTAMA MUSLIMIN CILILIN</h2>
                 </div>
-                
+
                 <form class="login-form" id="loginForm">
                     <div id="loginError" class="login-error">
-                        Username atau password salah!
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span id="errorMessage">Username atau password salah!</span>
                     </div>
-                    
+
+                    <div id="loginSuccess" class="login-success">
+                        <i class="fas fa-check-circle"></i> Login berhasil! Mengalihkan...
+                    </div>
+
                     <div class="form-group">
                         <label>Username</label>
-                        <input type="text" id="username" placeholder="Masukkan username" required>
+                        <input type="text" id="username" placeholder="Masukkan username" required
+                            autocomplete="username">
                     </div>
-                    
+
                     <div class="form-group">
                         <label>Password</label>
-                        <input type="password" id="password" placeholder="Masukkan password" required>
+                        <div class="password-container">
+                            <input type="password" id="password" placeholder="Masukkan password" required
+                                autocomplete="current-password">
+                            <button type="button" class="password-toggle" id="passwordToggle">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
                     </div>
-                    
-                    <button type="submit" class="login-btn">🔐 Login</button>
+
+                    <button type="submit" class="login-btn" id="loginBtn">
+                        <i class="fas fa-lock"></i> Login
+                    </button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Main Application -->
     <div class="app-container" id="appContainer">
         <div class="container">
             <div class="header">
-                <button class="logout-btn" onclick="logout()">🚪 Logout</button>
-                <div class="header-logo">🏫</div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+                <div class="session-info" id="sessionInfo">
+                    Session: <span id="sessionTimer">4:00:00</span>
+                </div>
+                <div class="header-logo">
+                    <i class="fas fa-school"></i>
+                </div>
                 <h1>SEKOLAH MENENGAH PERTAMA MUSLIMIN CILILIN</h1>
                 <h2>Sistem Penerimaan Siswa Baru (SPMB)</h2>
                 <p>Tahun Ajaran <span id="currentYear"></span></p>
             </div>
-            
+
             <div class="nav">
-                <button class="nav-btn active" onclick="showPage('form')">📝 Form Pendaftaran</button>
-                <button class="nav-btn" onclick="showPage('list')">📋 Data Pendaftar</button>
-                <button class="nav-btn" onclick="showPage('stats')">📊 Laporan Statistik</button>
+                <button class="nav-btn active" onclick="showPage('form')">
+                    <i class="fas fa-file-alt"></i> Form Pendaftaran
+                </button>
+                <button class="nav-btn" onclick="showPage('list')">
+                    <i class="fas fa-list"></i> Data Pendaftar
+                </button>
+                <button class="nav-btn" onclick="showPage('stats')">
+                    <i class="fas fa-chart-bar"></i> Laporan Statistik
+                </button>
             </div>
-            
-            <!-- Form Input Data -->
+
             <div class="page active" id="form">
-                <h2>📝 Form Pendaftaran Calon Siswa Baru</h2>
-                <div id="successMessage" class="alert alert-success" style="display: none;">
-                    ✅ Data berhasil disimpan!
+                <h2><i class="fas fa-file-alt"></i> Form Pendaftaran Calon Siswa Baru</h2>
+
+                <div class="backup-status" id="backupStatus">
+                    <div class="backup-indicator"></div>
+                    <span><i class="fas fa-shield-alt"></i> Sistem backup aktif - Data aman tersimpan</span>
                 </div>
-                
+
+                <div id="successMessage" class="alert alert-success" style="display: none;">
+                    <i class="fas fa-check-circle"></i> Data berhasil disimpan!
+                </div>
+
+                <div id="formModeLabel"
+                    style="text-align: center; font-weight: bold; color: #4CAF50; margin-bottom: 10px;">
+                    Mode: Tambah Data
+                </div>
+
                 <form id="studentForm">
                     <div class="form-group">
                         <label>Nama Lengkap <span class="required">*</span></label>
                         <input type="text" id="nama" placeholder="Masukkan nama lengkap sesuai akta kelahiran" required>
                     </div>
-                    
+
                     <div class="form-row">
                         <div class="form-group">
                             <label>Jenis Kelamin <span class="required">*</span></label>
@@ -712,53 +1103,76 @@
                             <input type="text" id="tempatLahir" placeholder="Contoh: Bandung" required>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label>Tanggal Lahir <span class="required">*</span></label>
                         <input type="date" id="tanggalLahir" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label>Alamat Lengkap <span class="required">*</span></label>
-                        <textarea id="alamat" rows="3" placeholder="Masukkan alamat lengkap tempat tinggal saat ini" required></textarea>
+                        <textarea id="alamat" rows="3" placeholder="Masukkan alamat lengkap tempat tinggal saat ini"
+                            required></textarea>
                     </div>
-                    
+
                     <div class="form-group">
                         <label>Nama Orang Tua/Wali <span class="required">*</span></label>
                         <input type="text" id="namaOrtu" placeholder="Nama lengkap orang tua/wali" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label>No. HP Orang Tua <span class="required">*</span></label>
                         <input type="tel" id="hpOrtu" placeholder="Contoh: 08123456789" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label>Asal Sekolah SD/MI <span class="required">*</span></label>
                         <input type="text" id="asalSekolah" placeholder="Contoh: SDN 01 Cililin" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label>NISN</label>
                         <input type="text" id="nisn" placeholder="Nomor Induk Siswa Nasional (10 digit)" maxlength="10">
                     </div>
-                    
+
                     <div style="text-align: center; margin-top: 30px;">
-                        <button type="button" class="btn btn-warning" onclick="resetForm()">🔄 Reset Form</button>
-                        <button type="submit" class="btn btn-primary">💾 Daftar Sekarang</button>
+                        <button type="button" class="btn btn-warning" onclick="resetForm()">
+                            <i class="fas fa-redo"></i> Reset Form
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <i class="fas fa-save"></i> Daftar Sekarang
+                        </button>
                     </div>
                 </form>
             </div>
-            
-            <!-- Daftar Pendaftar -->
+
             <div class="page" id="list">
-                <h2>📋 Daftar Calon Siswa Baru</h2>
-                
+                <h2><i class="fas fa-list"></i> Daftar Calon Siswa Baru</h2>
+
+                <div class="backup-status success" id="dataBackupStatus">
+                    <div class="backup-indicator"></div>
+                    <span id="backupInfo"><i class="fas fa-database"></i> Terakhir backup: <span
+                            id="lastBackup">-</span></span>
+                </div>
+
                 <div class="search-box">
                     <input type="text" id="searchInput" placeholder="🔍 Cari nama siswa...">
-                    <button class="btn btn-success" onclick="exportToExcel()">📊 Export Excel</button>
+                    <button class="btn btn-success" onclick="exportToExcel()">
+                        <i class="fas fa-file-excel"></i> Export Excel
+                    </button>
+                    <input type="file" id="uploadJSON" accept=".json" style="display:none;"
+                        onchange="handleUpload(event)">
+                    <button class="btn btn-info" onclick="document.getElementById('uploadJSON').click();">
+                        <i class="fas fa-upload"></i> Upload JSON
+                    </button>
+                    <button class="btn btn-info" onclick="exportToJSON()">
+                        <i class="fas fa-file-export"></i> Backup JSON
+                    </button>
+                    <button class="btn btn-warning" onclick="createEmergencyBackup()">
+                        <i class="fas fa-exclamation-triangle"></i> Emergency Backup
+                    </button>
                 </div>
-                
+
                 <table class="data-table" id="studentTable">
                     <thead>
                         <tr>
@@ -772,15 +1186,22 @@
                         </tr>
                     </thead>
                     <tbody id="studentTableBody">
-                        <!-- Data akan ditambahkan via JavaScript -->
                     </tbody>
                 </table>
+
+                <div class="pagination">
+                </div>
             </div>
-            
-            <!-- Statistik -->
+
             <div class="page" id="stats">
-                <h2>📊 Statistik Pendaftaran</h2>
-                
+                <h2><i class="fas fa-chart-bar"></i> Statistik Pendaftaran</h2>
+
+                <div class="backup-status warning">
+                    <div class="backup-indicator"></div>
+                    <span><i class="fas fa-info-circle"></i> Data integrity: <span id="dataIntegrity">100%</span> |
+                        Version: <span id="dataVersion">1.0</span></span>
+                </div>
+
                 <div class="stats">
                     <div class="stat-card">
                         <div class="stat-number" id="totalPendaftar">0</div>
@@ -795,364 +1216,1183 @@
                         <div>Perempuan</div>
                     </div>
                 </div>
-                
-                <div style="background: rgba(248, 249, 250, 0.8); padding: 20px; border-radius: 15px; margin: 20px 0; backdrop-filter: blur(10px);">
-                    <h3>📈 Ringkasan Pendaftaran</h3>
+
+                <div
+                    style="background: rgba(248, 249, 250, 0.8); padding: 20px; border-radius: 15px; margin: 20px 0; backdrop-filter: blur(10px);">
+                    <h3><i class="fas fa-school"></i> Ringkasan Pendaftaran</h3>
                     <div id="schoolStats">
                         <p>Belum ada data pendaftaran</p>
                     </div>
                 </div>
-                
-                <div style="text-align: center;">
-                    <button class="btn btn-success" onclick="exportToExcel()">📊 Export Semua Data ke Excel</button>
-                </div>
             </div>
         </div>
     </div>
-    
+
     <script>
-        // Data storage
+        // SECURITY & ENCRYPTION SYSTEM - NEW
+        class SecurityManager {
+            constructor() {
+                this.pepper = 'smp_muslimin_cililin_2025';
+                this.loginAttempts = 0;
+                this.lockoutTime = 10 * 60 * 1000; // 10 minutes
+                this.maxAttempts = 3;
+                this.sessionDuration = 4 * 60 * 60 * 1000; // 4 hours
+            }
+
+            // Simple hash function (in production, use bcrypt or similar)
+            hashPassword(password) {
+                let hash = 0;
+                const str = password + this.pepper;
+                for (let i = 0; i < str.length; i++) {
+                    const char = str.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash; // Convert to 32-bit integer
+                }
+                return Math.abs(hash).toString(16);
+            }
+
+            // Encrypt data for localStorage
+            encryptData(data) {
+                const jsonStr = JSON.stringify(data);
+                let encrypted = '';
+                const key = this.pepper.length;
+
+                for (let i = 0; i < jsonStr.length; i++) {
+                    encrypted += String.fromCharCode(jsonStr.charCodeAt(i) + key);
+                }
+
+                return btoa(encrypted);
+            }
+
+            // Decrypt data from localStorage
+            decryptData(encryptedData) {
+                try {
+                    const encrypted = atob(encryptedData);
+                    let decrypted = '';
+                    const key = this.pepper.length;
+
+                    for (let i = 0; i < encrypted.length; i++) {
+                        decrypted += String.fromCharCode(encrypted.charCodeAt(i) - key);
+                    }
+
+                    return JSON.parse(decrypted);
+                } catch (error) {
+                    console.error('Decryption failed:', error);
+                    return null;
+                }
+            }
+
+            // Check if user is locked out
+            isLockedOut() {
+                const lockoutEnd = localStorage.getItem('lockoutEnd');
+                if (lockoutEnd && Date.now() < parseInt(lockoutEnd)) {
+                    return true;
+                }
+                return false;
+            }
+
+            // Set lockout
+            setLockout() {
+                const lockoutEnd = Date.now() + this.lockoutTime;
+                localStorage.setItem('lockoutEnd', lockoutEnd.toString());
+            }
+
+            // Clear lockout
+            clearLockout() {
+                localStorage.removeItem('lockoutEnd');
+                this.loginAttempts = 0;
+            }
+
+            // Validate login
+            validateLogin(username, password) {
+                if (this.isLockedOut()) {
+                    const lockoutEnd = localStorage.getItem('lockoutEnd');
+                    const remainingTime = Math.ceil((parseInt(lockoutEnd) - Date.now()) / 60000);
+                    return { success: false, message: `Akun terblokir. Coba lagi dalam ${remainingTime} menit.` };
+                }
+
+                const validUsername = 'admin';
+                const validPasswordHash = this.hashPassword('smpmuslimin');
+
+                if (username !== validUsername) {
+                    this.loginAttempts++;
+                    if (this.loginAttempts >= this.maxAttempts) {
+                        this.setLockout();
+                        return { success: false, message: 'Terlalu banyak percobaan login. Akun diblokir 10 menit.' };
+                    }
+                    return { success: false, message: 'Username tidak ditemukan.' };
+                }
+
+                if (this.hashPassword(password) !== validPasswordHash) {
+                    this.loginAttempts++;
+                    if (this.loginAttempts >= this.maxAttempts) {
+                        this.setLockout();
+                        return { success: false, message: 'Terlalu banyak percobaan login. Akun diblokir 10 menit.' };
+                    }
+                    const remaining = this.maxAttempts - this.loginAttempts;
+                    return { success: false, message: `Password salah. Sisa ${remaining} percobaan lagi.` };
+                }
+
+                this.clearLockout();
+                return { success: true, message: 'Login berhasil!' };
+            }
+
+            // Create session
+            createSession() {
+                const sessionStart = Date.now();
+                const sessionEnd = sessionStart + this.sessionDuration;
+                localStorage.setItem('sessionStart', sessionStart.toString());
+                localStorage.setItem('sessionEnd', sessionEnd.toString());
+                localStorage.setItem('isLoggedIn', 'true');
+            }
+
+            // Check session validity
+            isSessionValid() {
+                const sessionEnd = localStorage.getItem('sessionEnd');
+                const isLoggedIn = localStorage.getItem('isLoggedIn');
+
+                if (!sessionEnd || !isLoggedIn) return false;
+
+                return Date.now() < parseInt(sessionEnd);
+            }
+
+            // Clear session
+            clearSession() {
+                localStorage.removeItem('sessionStart');
+                localStorage.removeItem('sessionEnd');
+                localStorage.removeItem('isLoggedIn');
+            }
+
+            // Get remaining session time
+            getSessionTimeRemaining() {
+                const sessionEnd = localStorage.getItem('sessionEnd');
+                if (!sessionEnd) return 0;
+
+                const remaining = Math.max(0, parseInt(sessionEnd) - Date.now());
+                return remaining;
+            }
+        }
+
+        // BACKUP SYSTEM - NEW
+        class BackupManager {
+            constructor() {
+                this.backupInterval = 30 * 60 * 1000; // 30 minutes
+                this.maxBackups = 10;
+                this.backupPrefix = 'smpmuslimin_backup_';
+            }
+            checkStorageUsage() {
+                const used = JSON.stringify(localStorage).length;
+                const usedMB = (used / 1024 / 1024).toFixed(2);
+                console.log(`Storage used: ${usedMB}MB`);
+
+                if (used > 8000000) { // 8MB warning
+                    showToast('Storage hampir penuh! Pertimbangkan arsipkan data lama.', 'warning');
+                }
+
+                return { used, usedMB };
+            }
+
+            // Create automatic backup
+            createAutoBackup(students) {
+                const timestamp = Date.now();
+                const backupData = {
+                    timestamp: timestamp,
+                    version: '1.0',
+                    totalStudents: students.length,
+                    data: students,
+                    checksum: this.calculateChecksum(students)
+                };
+
+                const backupKey = this.backupPrefix + timestamp;
+                const encryptedBackup = securityManager.encryptData(backupData);
+
+                try {
+                    localStorage.setItem(backupKey, encryptedBackup);
+                    localStorage.setItem('lastBackupTime', timestamp.toString());
+
+                    // Clean old backups
+                    this.cleanOldBackups();
+
+                    this.updateBackupStatus('success', 'Auto backup berhasil');
+                    console.log('Auto backup created:', new Date(timestamp).toLocaleString());
+
+                    return true;
+                } catch (error) {
+                    console.error('Auto backup failed:', error);
+                    this.updateBackupStatus('warning', 'Auto backup gagal');
+                    return false;
+                }
+            }
+
+            // Create emergency backup
+            createEmergencyBackup(students) {
+                const timestamp = Date.now();
+                const backupData = {
+                    timestamp: timestamp,
+                    version: '1.0',
+                    type: 'emergency',
+                    totalStudents: students.length,
+                    data: students,
+                    checksum: this.calculateChecksum(students),
+                    reason: 'Manual emergency backup'
+                };
+
+                // Save to localStorage
+                const backupKey = 'emergency_backup_' + timestamp;
+                const encryptedBackup = securityManager.encryptData(backupData);
+                localStorage.setItem(backupKey, encryptedBackup);
+
+                // Also download as file
+                const jsonStr = JSON.stringify(backupData, null, 2);
+                const blob = new Blob([jsonStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `EMERGENCY_BACKUP_SMP_Muslimin_${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                showToast('Emergency backup berhasil dibuat!', 'success');
+                return true;
+            }
+
+            // Calculate data checksum
+            calculateChecksum(data) {
+                const str = JSON.stringify(data);
+                let hash = 0;
+                for (let i = 0; i < str.length; i++) {
+                    const char = str.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash;
+                }
+                return Math.abs(hash).toString(16);
+            }
+
+            // Verify data integrity
+            verifyDataIntegrity(students) {
+                const expectedChecksum = this.calculateChecksum(students);
+                const lastChecksum = localStorage.getItem('lastDataChecksum');
+
+                localStorage.setItem('lastDataChecksum', expectedChecksum);
+
+                if (lastChecksum && lastChecksum !== expectedChecksum) {
+                    console.warn('Data integrity check: Data has been modified');
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Clean old backups
+            cleanOldBackups() {
+                const allKeys = Object.keys(localStorage);
+                const backupKeys = allKeys.filter(key => key.startsWith(this.backupPrefix));
+
+                if (backupKeys.length > this.maxBackups) {
+                    // Sort by timestamp (oldest first)
+                    backupKeys.sort((a, b) => {
+                        const timestampA = parseInt(a.replace(this.backupPrefix, ''));
+                        const timestampB = parseInt(b.replace(this.backupPrefix, ''));
+                        return timestampA - timestampB;
+                    });
+
+                    // Remove oldest backups
+                    const toRemove = backupKeys.slice(0, backupKeys.length - this.maxBackups);
+                    toRemove.forEach(key => {
+                        localStorage.removeItem(key);
+                        console.log('Removed old backup:', key);
+                    });
+                }
+            }
+
+            // Get backup list
+            getBackupList() {
+                const allKeys = Object.keys(localStorage);
+                const backupKeys = allKeys.filter(key =>
+                    key.startsWith(this.backupPrefix) || key.startsWith('emergency_backup_')
+                );
+
+                return backupKeys.map(key => {
+                    const timestamp = key.includes('emergency_backup_')
+                        ? parseInt(key.replace('emergency_backup_', ''))
+                        : parseInt(key.replace(this.backupPrefix, ''));
+
+                    return {
+                        key: key,
+                        timestamp: timestamp,
+                        date: new Date(timestamp).toLocaleString(),
+                        type: key.includes('emergency_backup_') ? 'emergency' : 'auto'
+                    };
+                }).sort((a, b) => b.timestamp - a.timestamp);
+            }
+
+            // Restore from backup
+            restoreFromBackup(backupKey) {
+                try {
+                    const encryptedBackup = localStorage.getItem(backupKey);
+                    if (!encryptedBackup) {
+                        throw new Error('Backup not found');
+                    }
+
+                    const backupData = securityManager.decryptData(encryptedBackup);
+                    if (!backupData) {
+                        throw new Error('Failed to decrypt backup data');
+                    }
+
+                    // Verify backup integrity
+                    const calculatedChecksum = this.calculateChecksum(backupData.data);
+                    if (calculatedChecksum !== backupData.checksum) {
+                        throw new Error('Backup data is corrupted');
+                    }
+
+                    return backupData.data;
+                } catch (error) {
+                    console.error('Restore failed:', error);
+                    throw error;
+                }
+            }
+
+            // Update backup status display
+            updateBackupStatus(type, message) {
+                const backupStatus = document.getElementById('backupStatus');
+                const dataBackupStatus = document.getElementById('dataBackupStatus');
+                const lastBackupSpan = document.getElementById('lastBackup');
+
+                const lastBackupTime = localStorage.getItem('lastBackupTime');
+                const lastBackupDate = lastBackupTime
+                    ? new Date(parseInt(lastBackupTime)).toLocaleString()
+                    : 'Belum pernah';
+
+                if (lastBackupSpan) {
+                    lastBackupSpan.textContent = lastBackupDate;
+                }
+
+                if (backupStatus) {
+                    backupStatus.className = `backup-status ${type}`;
+                    backupStatus.innerHTML = `
+                        <div class="backup-indicator"></div>
+                        <span><i class="fas fa-shield-alt"></i> ${message}</span>
+                    `;
+                }
+
+                if (dataBackupStatus) {
+                    dataBackupStatus.className = `backup-status ${type}`;
+                }
+            }
+
+            // Start automatic backup
+            startAutoBackup() {
+                setInterval(() => {
+                    if (students.length > 0) {
+                        this.createAutoBackup(students);
+                    }
+                }, this.backupInterval);
+
+                // Initial backup check
+                const lastBackupTime = localStorage.getItem('lastBackupTime');
+                if (!lastBackupTime || (Date.now() - parseInt(lastBackupTime)) > this.backupInterval) {
+                    if (students.length > 0) {
+                        this.createAutoBackup(students);
+                    }
+                }
+            }
+        }
+
+        // TOAST NOTIFICATION SYSTEM - NEW
+        function showToast(message, type = 'success') {
+            // Remove existing toast
+            const existingToast = document.querySelector('.toast');
+            if (existingToast) {
+                existingToast.remove();
+            }
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+
+            const icon = type === 'success' ? 'fa-check-circle' :
+                type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
+
+            toast.innerHTML = `
+                <i class="fas ${icon}"></i>
+                <span>${message}</span>
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => toast.classList.add('show'), 100);
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Initialize security and backup managers
+        const securityManager = new SecurityManager();
+        const backupManager = new BackupManager();
+
+        // Data storage dengan localStorage (ENCRYPTED) - UPDATED
         let students = [];
-        
+        let currentEditIndex = -1;
+        let currentPage = 1;
+        const rowsPerPage = 10;
+        let sessionTimer = null;
+
         // Get current academic year
         function getCurrentAcademicYear() {
             const now = new Date();
             const currentYear = now.getFullYear();
             const currentMonth = now.getMonth(); // 0-11
-            
+
             if (currentMonth >= 6) { // July onwards
                 return `${currentYear}/${currentYear + 1}`;
             } else {
                 return `${currentYear - 1}/${currentYear}`;
             }
         }
-        
-        // Initialize when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set current year on page load
-            const yearSpan = document.getElementById('currentYear');
-            if (yearSpan) {
-                yearSpan.textContent = getCurrentAcademicYear();
-            }
-            
-            // Set minimum date for birth date (max 18 years old)
-            const today = new Date();
-            const maxDate = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
-            const minDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
-            
-            const dateInput = document.getElementById('tanggalLahir');
-            if (dateInput) {
-                dateInput.max = maxDate.toISOString().split('T')[0];
-                dateInput.min = minDate.toISOString().split('T')[0];
-            }
-            
-            // Focus on username field
-            const usernameInput = document.getElementById('username');
-            if (usernameInput) {
-                usernameInput.focus();
-            }
-            
-            // Login functionality
-            const loginForm = document.getElementById('loginForm');
-            if (loginForm) {
-                loginForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    const username = document.getElementById('username').value;
-                    const password = document.getElementById('password').value;
-                    
-                    if (username === 'admin' && password === 'admin') {
-                        // Hide login page and show main app
-                        document.getElementById('loginPage').style.display = 'none';
-                        document.getElementById('appContainer').style.display = 'block';
-                        
-                        // Set current academic year
-                        const yearSpan = document.getElementById('currentYear');
-                        if (yearSpan) {
-                            yearSpan.textContent = getCurrentAcademicYear();
-                        }
-                        
-                        // Update stats on login
-                        updateStats();
-                        
-                    } else {
-                        // Show error message
-                        const errorDiv = document.getElementById('loginError');
-                        if (errorDiv) {
-                            errorDiv.style.display = 'block';
-                            setTimeout(() => {
-                                errorDiv.style.display = 'none';
-                            }, 3000);
-                        }
-                    }
-                });
-            }
-            
-            // Handle student form submission
-            const studentForm = document.getElementById('studentForm');
-            if (studentForm) {
-                studentForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    // Validate NISN if provided
-                    const nisn = document.getElementById('nisn').value;
-                    if (nisn && nisn.length !== 10) {
-                        alert('NISN harus terdiri dari 10 digit angka');
-                        return;
-                    }
-                    
-                    // Validate phone number
-                    const hpOrtu = document.getElementById('hpOrtu').value;
-                    if (!/^08[0-9]{8,11}$/.test(hpOrtu)) {
-                        alert('Format nomor HP tidak valid. Gunakan format: 08xxxxxxxxx');
-                        return;
-                    }
-                    
-                    const newStudent = {
-                        nama: document.getElementById('nama').value,
-                        jenisKelamin: document.getElementById('jenisKelamin').value,
-                        tempatLahir: document.getElementById('tempatLahir').value,
-                        tanggalLahir: document.getElementById('tanggalLahir').value,
-                        alamat: document.getElementById('alamat').value,
-                        namaOrtu: document.getElementById('namaOrtu').value,
-                        hpOrtu: hpOrtu,
-                        asalSekolah: document.getElementById('asalSekolah').value,
-                        nisn: nisn || '-',
-                        tanggalDaftar: new Date().toLocaleDateString('id-ID')
-                    };
-                    
-                    students.push(newStudent);
-                    
-                    // Show success message
-                    const successMsg = document.getElementById('successMessage');
-                    if (successMsg) {
-                        successMsg.style.display = 'block';
-                        setTimeout(() => {
-                            successMsg.style.display = 'none';
-                        }, 3000);
-                    }
-                    
-                    // Reset form
-                    this.reset();
-                    
-                    // Here you would normally save to Google Sheets
-                    console.log('Data siswa baru:', newStudent);
-                });
-            }
-            
-            // Search functionality
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) {
-                searchInput.addEventListener('input', function(e) {
-                    const searchTerm = e.target.value.toLowerCase();
-                    const rows = document.querySelectorAll('#studentTableBody tr');
-                    
-                    rows.forEach(row => {
-                        if (row.cells.length > 1) { // Skip empty state row
-                            const nama = row.cells[1].textContent.toLowerCase();
-                            const sekolah = row.cells[4].textContent.toLowerCase();
-                            if (nama.includes(searchTerm) || sekolah.includes(searchTerm)) {
-                                row.style.display = '';
-                            } else {
-                                row.style.display = 'none';
-                            }
-                        }
-                    });
-                });
-            }
-        });
-        
-        function logout() {
-            if (confirm('Yakin ingin logout?')) {
-                document.getElementById('loginPage').style.display = 'block';
-                document.getElementById('appContainer').style.display = 'none';
-                const loginForm = document.getElementById('loginForm');
-                if (loginForm) {
-                    loginForm.reset();
-                }
-            }
-        }
-        
-        function showPage(pageId) {
-            // Hide all pages
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(page => page.classList.remove('active'));
-            
-            // Remove active class from nav buttons
-            const navBtns = document.querySelectorAll('.nav-btn');
-            navBtns.forEach(btn => btn.classList.remove('active'));
-            
-            // Show selected page
-            const targetPage = document.getElementById(pageId);
-            if (targetPage) {
-                targetPage.classList.add('active');
-            }
-            
-            // Add active class to clicked button
-            if (event && event.target) {
-                event.target.classList.add('active');
-            }
-            
-            // Update data when showing list or stats
-            if (pageId === 'list') {
-                updateTable();
-            } else if (pageId === 'stats') {
-                updateStats();
-            }
-        }
-        
-        function resetForm() {
-            if (confirm('Yakin ingin mengosongkan semua form?')) {
-                const studentForm = document.getElementById('studentForm');
-                if (studentForm) {
-                    studentForm.reset();
-                }
-            }
-        }
-        
-        function updateTable() {
-            const tbody = document.getElementById('studentTableBody');
-            if (!tbody) return;
-            
-            tbody.innerHTML = '';
-            
-            if (students.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #666;">Belum ada data pendaftar</td></tr>';
-                return;
-            }
-            
-            students.forEach((student, index) => {
-                const row = tbody.insertRow();
-                row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td><strong>${student.nama}</strong></td>
-                    <td>${student.jenisKelamin}</td>
-                    <td>${student.tempatLahir}, ${formatDate(student.tanggalLahir)}</td>
-                    <td>${student.asalSekolah}</td>
-                    <td>${student.hpOrtu}</td>
-                    <td>
-                        <button class="btn btn-danger" onclick="deleteStudent(${index})" title="Hapus data">🗑️</button>
-                    </td>
-                `;
-            });
-        }
-        
-        function deleteStudent(index) {
-            if (confirm('Yakin ingin menghapus data siswa "' + students[index].nama + '"?')) {
-                students.splice(index, 1);
-                updateTable();
-                updateStats();
-            }
-        }
-        
+
+        // Format tanggal untuk ditampilkan
         function formatDate(dateString) {
             const date = new Date(dateString);
-            const options = { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+            const options = {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
             };
             return date.toLocaleDateString('id-ID', options);
         }
-        
-        function updateStats() {
-            const total = students.length;
-            const lakiLaki = students.filter(s => s.jenisKelamin === 'Laki-laki').length;
-            const perempuan = students.filter(s => s.jenisKelamin === 'Perempuan').length;
-            
-            const totalEl = document.getElementById('totalPendaftar');
-            const lakiLakiEl = document.getElementById('lakiLaki');
-            const perempuanEl = document.getElementById('perempuan');
-            
-            if (totalEl) totalEl.textContent = total;
-            if (lakiLakiEl) lakiLakiEl.textContent = lakiLaki;
-            if (perempuanEl) perempuanEl.textContent = perempuan;
-            
-            // Update school statistics
-            const schoolStats = document.getElementById('schoolStats');
-            if (!schoolStats) return;
-            
-            if (total === 0) {
-                schoolStats.innerHTML = '<p style="color: #666; font-style: italic;">Belum ada data pendaftaran</p>';
-            } else {
-                // Group by school
-                const schoolCounts = {};
-                students.forEach(student => {
-                    schoolCounts[student.asalSekolah] = (schoolCounts[student.asalSekolah] || 0) + 1;
+
+        // Simpan data ke localStorage (ENCRYPTED) - UPDATED
+        function saveStudents() {
+            try {
+                // Assign unique IDs if missing
+                students.forEach((student, index) => {
+                    if (!student.id) {
+                        student.id = 'STD' + Date.now() + '_' + index;
+                    }
+                    if (!student.version) {
+                        student.version = 1;
+                    }
                 });
-                
-                // Sort by count
-                const sortedSchools = Object.entries(schoolCounts)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 5); // Top 5 schools
-                
-                let statsHTML = '<h4>📚 Asal Sekolah Terbanyak:</h4>';
-                sortedSchools.forEach(([school, count]) => {
-                    statsHTML += `<div style="margin: 8px 0; padding: 8px; background: rgba(76, 175, 80, 0.1); border-radius: 8px;">
-                        <strong>${school}:</strong> ${count} siswa
-                    </div>`;
-                });
-                
-                schoolStats.innerHTML = statsHTML;
+
+                const encryptedData = securityManager.encryptData(students);
+                localStorage.setItem('students_encrypted', encryptedData);
+
+                // Verify data integrity
+                backupManager.verifyDataIntegrity(students);
+                backupManager.checkStorageUsage();
+
+                // Update data version
+                const currentVersion = localStorage.getItem('dataVersion') || '1.0';
+                document.getElementById('dataVersion').textContent = currentVersion;
+
+                return true;
+            } catch (error) {
+                console.error('Failed to save students:', error);
+                showToast('Gagal menyimpan data!', 'error');
+                return false;
             }
         }
-        
-        function exportToExcel() {
-            if (students.length === 0) {
-                alert('Tidak ada data untuk di-export');
+
+        // Load data dari localStorage (ENCRYPTED) - UPDATED
+        function loadStudents() {
+            try {
+                // Try to load encrypted data first
+                const encryptedData = localStorage.getItem('students_encrypted');
+                if (encryptedData) {
+                    const decryptedData = securityManager.decryptData(encryptedData);
+                    if (decryptedData && Array.isArray(decryptedData)) {
+                        return decryptedData;
+                    }
+                }
+
+                // Fallback to old unencrypted data (migration)
+                const oldData = localStorage.getItem('students');
+                if (oldData) {
+                    const parsedData = JSON.parse(oldData);
+                    if (Array.isArray(parsedData)) {
+                        // Migrate to encrypted storage
+                        const encryptedData = securityManager.encryptData(parsedData);
+                        localStorage.setItem('students_encrypted', encryptedData);
+                        localStorage.removeItem('students'); // Remove old data
+                        console.log('Data migrated to encrypted storage');
+                        return parsedData;
+                    }
+                }
+
+                return [];
+            } catch (error) {
+                console.error('Failed to load students:', error);
+                showToast('Gagal memuat data!', 'error');
+                return [];
+            }
+        }
+
+        // Session management - NEW
+        function startSessionTimer() {
+            if (sessionTimer) clearInterval(sessionTimer);
+
+            sessionTimer = setInterval(() => {
+                const remaining = securityManager.getSessionTimeRemaining();
+
+                if (remaining <= 0) {
+                    logout(true); // Auto logout
+                    return;
+                }
+
+                const hours = Math.floor(remaining / (1000 * 60 * 60));
+                const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+
+                const sessionTimerEl = document.getElementById('sessionTimer');
+                if (sessionTimerEl) {
+                    sessionTimerEl.textContent = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+
+                // Warning at 5 minutes
+                if (remaining <= 5 * 60 * 1000 && remaining > 4 * 60 * 1000) {
+                    showToast('Session akan berakhir dalam 5 menit!', 'warning');
+                }
+            }, 1000);
+        }
+
+        // Password visibility toggle - NEW
+        function initPasswordToggle() {
+            const passwordInput = document.getElementById('password');
+            const toggleBtn = document.getElementById('passwordToggle');
+
+            if (toggleBtn && passwordInput) {
+                toggleBtn.addEventListener('click', function () {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+
+                    const icon = this.querySelector('i');
+                    icon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+                });
+            }
+        }
+
+        // Enhanced login error handling - UPDATED
+        function showLoginError(message) {
+            const errorDiv = document.getElementById('loginError');
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (errorDiv && errorMessage) {
+                errorMessage.textContent = message;
+                errorDiv.classList.add('show');
+
+                // Auto hide after 5 seconds
+                setTimeout(() => {
+                    errorDiv.classList.remove('show');
+                }, 5000);
+            }
+        }
+
+        // Show login success - NEW
+        function showLoginSuccess() {
+            const successDiv = document.getElementById('loginSuccess');
+            if (successDiv) {
+                successDiv.style.display = 'block';
+            }
+        }
+
+        // Hide login messages - NEW
+        function hideLoginMessages() {
+            const errorDiv = document.getElementById('loginError');
+            const successDiv = document.getElementById('loginSuccess');
+
+            if (errorDiv) errorDiv.classList.remove('show');
+            if (successDiv) successDiv.style.display = 'none';
+        }
+
+        // Login form handler - UPDATED
+        function handleLogin(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+
+            // Hide previous messages
+            hideLoginMessages();
+
+            // Show loading state
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<div class="loading-spinner"></div>Memverifikasi...';
+
+            // Simulate network delay for better UX
+            setTimeout(() => {
+                const result = securityManager.validateLogin(username, password);
+
+                if (result.success) {
+                    showLoginSuccess();
+                    securityManager.createSession();
+
+                    setTimeout(() => {
+                        document.getElementById('loginPage').style.display = 'none';
+                        document.getElementById('appContainer').style.display = 'block';
+                        startSessionTimer();
+                        initializeApp();
+                    }, 1500);
+                } else {
+                    showLoginError(result.message);
+                }
+
+                // Restore button state
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-lock"></i> Login';
+            }, 1000);
+        }
+
+        // Logout function - UPDATED
+        function logout(isAutoLogout = false) {
+            if (sessionTimer) {
+                clearInterval(sessionTimer);
+                sessionTimer = null;
+            }
+
+            securityManager.clearSession();
+
+            document.getElementById('appContainer').style.display = 'none';
+            document.getElementById('loginPage').style.display = 'block';
+
+            // Clear form
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+
+            if (isAutoLogout) {
+                showToast('Session telah berakhir. Silakan login kembali.', 'warning');
+            } else {
+                showToast('Logout berhasil!', 'success');
+            }
+        }
+
+        // Check if already logged in - NEW
+        function checkExistingSession() {
+            if (securityManager.isSessionValid()) {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('appContainer').style.display = 'block';
+                startSessionTimer();
+                initializeApp();
+                return true;
+            }
+            return false;
+        }
+
+        // Initialize the application - UPDATED
+        function initializeApp() {
+            // Set current year
+            document.getElementById('currentYear').textContent = getCurrentAcademicYear();
+
+            // Load students data
+            students = loadStudents();
+
+            // Initialize displays
+            displayStudents();
+            updateStatistics();
+
+            // Start auto backup
+            backupManager.startAutoBackup();
+
+            // Update backup status
+            backupManager.updateBackupStatus('success', 'Sistem backup aktif - Data aman tersimpan');
+
+            console.log('Application initialized with', students.length, 'students');
+        }
+
+        // Tambah atau Edit Student - UPDATED
+        function handleStudentForm(event) {
+            event.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerHTML;
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<div class="loading-spinner"></div>Menyimpan...';
+
+            const student = {
+                id: currentEditIndex >= 0 ? students[currentEditIndex].id : 'STD' + Date.now(),
+                nama: document.getElementById('nama').value.trim(),
+                jenisKelamin: document.getElementById('jenisKelamin').value,
+                tempatLahir: document.getElementById('tempatLahir').value.trim(),
+                tanggalLahir: document.getElementById('tanggalLahir').value,
+                alamat: document.getElementById('alamat').value.trim(),
+                namaOrtu: document.getElementById('namaOrtu').value.trim(),
+                hpOrtu: document.getElementById('hpOrtu').value.trim(),
+                asalSekolah: document.getElementById('asalSekolah').value.trim(),
+                nisn: document.getElementById('nisn').value.trim() || '-',
+                tanggalDaftar: currentEditIndex >= 0 ? students[currentEditIndex].tanggalDaftar : new Date().toISOString().split('T')[0],
+                version: 1
+            };
+
+            // Validate phone number
+            const phoneRegex = /^(\+62|62|0)[0-9]{9,13}$/;
+            if (!phoneRegex.test(student.hpOrtu.replace(/\s+/g, ''))) {
+                showToast('Format nomor HP tidak valid!', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
                 return;
             }
-            
-            // Create CSV content
-            let csvContent = "No,Nama Lengkap,Jenis Kelamin,Tempat Lahir,Tanggal Lahir,Alamat,Nama Orang Tua,No HP Orang Tua,Asal Sekolah,NISN,Tanggal Daftar\n";
-            
-            students.forEach((student, index) => {
-                csvContent += `${index + 1},"${student.nama}","${student.jenisKelamin}","${student.tempatLahir}","${formatDate(student.tanggalLahir)}","${student.alamat}","${student.namaOrtu}","${student.hpOrtu}","${student.asalSekolah}","${student.nisn}","${student.tanggalDaftar}"\n`;
-            });
-            
-            // Create and download file
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            link.setAttribute('href', url);
-            link.setAttribute('download', `data_ppdb_smp_muslimin_${getCurrentAcademicYear().replace('/', '-')}.csv`);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            alert(`🎉 Data berhasil di-export!\n\nFile: data_ppdb_smp_muslimin_${getCurrentAcademicYear().replace('/', '-')}.csv\nTotal: ${students.length} siswa`);
+
+            // Simulate save delay for better UX
+            setTimeout(() => {
+                if (currentEditIndex >= 0) {
+                    students[currentEditIndex] = student;
+                    showToast('Data berhasil diperbarui!', 'success');
+                } else {
+                    students.push(student);
+                    showToast('Pendaftaran berhasil!', 'success');
+                }
+
+                if (saveStudents()) {
+                    // Create backup after save
+                    backupManager.createAutoBackup(students);
+
+                    displayStudents();
+                    updateStatistics();
+                    resetForm();
+
+                    // Show success message
+                    const successMessage = document.getElementById('successMessage');
+                    successMessage.style.display = 'block';
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 3000);
+                }
+
+                // Restore button state
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }, 1000);
         }
-        
-        // Add some sample data for demo (remove in production)
-        /*
-        students = [
-            {
-                nama: "Ahmad Rizky Pratama",
-                jenisKelamin: "Laki-laki",
-                tempatLahir: "Bandung",
-                tanggalLahir: "2010-03-15",
-                alamat: "Jl. Raya Cililin No. 123, Cililin",
-                namaOrtu: "Budi Pratama",
-                hpOrtu: "08123456789",
-                asalSekolah: "SDN 01 Cililin",
-                nisn: "0051234567",
-                tanggalDaftar: "10/08/2025"
-            },
-            {
-                nama: "Siti Nurhaliza",
-                jenisKelamin: "Perempuan",
-                tempatLahir: "Bandung Barat",
-                tanggalLahir: "2010-07-22",
-                alamat: "Jl. Warung Awi No. 456, Bongas",
-                namaOrtu: "Ibu Sari",
-                hpOrtu: "08187654321",
-                asalSekolah: "MI Al-Ikhlas Cililin",
-                nisn: "0057654321",
-                tanggalDaftar: "09/08/2025"
+
+        // Reset form - UPDATED
+        function resetForm() {
+            document.getElementById('studentForm').reset();
+            currentEditIndex = -1;
+
+            const submitBtn = document.getElementById('submitBtn');
+            const formModeLabel = document.getElementById('formModeLabel');
+
+            submitBtn.innerHTML = '<i class="fas fa-save"></i> Daftar Sekarang';
+            formModeLabel.textContent = 'Mode: Tambah Data';
+            formModeLabel.style.color = '#4CAF50';
+
+            // Hide success message
+            document.getElementById('successMessage').style.display = 'none';
+        }
+
+        // Edit student - UPDATED
+        function editStudent(index) {
+            const student = students[index];
+            currentEditIndex = index;
+
+            // Fill form
+            document.getElementById('nama').value = student.nama;
+            document.getElementById('jenisKelamin').value = student.jenisKelamin;
+            document.getElementById('tempatLahir').value = student.tempatLahir;
+            document.getElementById('tanggalLahir').value = student.tanggalLahir;
+            document.getElementById('alamat').value = student.alamat;
+            document.getElementById('namaOrtu').value = student.namaOrtu;
+            document.getElementById('hpOrtu').value = student.hpOrtu;
+            document.getElementById('asalSekolah').value = student.asalSekolah;
+            document.getElementById('nisn').value = student.nisn === '-' ? '' : student.nisn;
+
+            // Update UI
+            const submitBtn = document.getElementById('submitBtn');
+            const formModeLabel = document.getElementById('formModeLabel');
+
+            submitBtn.innerHTML = '<i class="fas fa-edit"></i> Update Data';
+            formModeLabel.textContent = 'Mode: Edit Data - ' + student.nama;
+            formModeLabel.style.color = '#ffc107';
+
+            // Switch to form page
+            showPage('form');
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+
+            showToast('Data dimuat untuk diedit', 'success');
+        }
+
+        // Delete student - UPDATED
+        function deleteStudent(index) {
+            const student = students[index];
+
+            if (confirm(`Yakin ingin menghapus data ${student.nama}?\n\nTindakan ini tidak dapat dibatalkan!`)) {
+                students.splice(index, 1);
+
+                if (saveStudents()) {
+                    displayStudents();
+                    updateStatistics();
+                    showToast(`Data ${student.nama} berhasil dihapus!`, 'success');
+
+                    // Create backup after delete
+                    backupManager.createAutoBackup(students);
+                }
             }
-        ];
-        */
+        }
+
+        // Display students with pagination - UPDATED
+        function displayStudents() {
+            const tbody = document.getElementById('studentTableBody');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+            // Filter students based on search
+            let filteredStudents = students;
+            if (searchTerm) {
+                filteredStudents = students.filter(student =>
+                    student.nama.toLowerCase().includes(searchTerm) ||
+                    student.asalSekolah.toLowerCase().includes(searchTerm) ||
+                    student.namaOrtu.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            // Calculate pagination
+            const totalPages = Math.ceil(filteredStudents.length / rowsPerPage);
+            const startIndex = (currentPage - 1) * rowsPerPage;
+            const endIndex = startIndex + rowsPerPage;
+            const currentStudents = filteredStudents.slice(startIndex, endIndex);
+
+            // Build HTML as string
+            let html = '';
+            if (currentStudents.length === 0) {
+                html = `
+      <tr>
+        <td colspan="7" style="text-align: center; padding: 40px; color: #666;">
+          <i class="fas fa-search" style="font-size: 48px; margin-bottom: 10px; display: block;"></i>
+          ${searchTerm ? 'Tidak ada data yang sesuai dengan pencarian' : 'Belum ada data pendaftar'}
+        </td>
+      </tr>
+    `;
+            } else {
+                currentStudents.forEach((student, index) => {
+                    const bgColor = student.jenisKelamin === 'Laki-laki' ? '#e3f2fd' : '#fce4ec';
+                    const textColor = student.jenisKelamin === 'Laki-laki' ? '#1976d2' : '#c2185b';
+
+                    html += `
+        <tr>
+          <td>${startIndex + index + 1}</td>
+          <td><strong>${student.nama}</strong></td>
+          <td><span style="padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; background: ${bgColor}; color: ${textColor}">
+              ${student.jenisKelamin}
+          </span></td>
+          <td>${student.tempatLahir}, ${formatDate(student.tanggalLahir)}</td>
+          <td>${student.asalSekolah}</td>
+          <td><a href="tel:${student.hpOrtu}" style="color: #4CAF50; text-decoration: none;"><i class="fas fa-phone"></i> ${student.hpOrtu}</a></td>
+          <td>
+            <button class="btn btn-warning" onclick="editStudent(${students.indexOf(student)})" style="padding: 8px 12px; margin: 2px; font-size: 12px;">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-danger" onclick="deleteStudent(${students.indexOf(student)})" style="padding: 8px 12px; margin: 2px; font-size: 12px;">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      `;
+                });
+            }
+
+            // One-time DOM update
+            tbody.innerHTML = html;
+            updatePagination(totalPages, filteredStudents.length);
+        }
+
+        // Update pagination - NEW
+        function updatePagination(totalPages, totalStudents) {
+            const paginationDiv = document.querySelector('.pagination');
+            paginationDiv.innerHTML = '';
+
+            if (totalPages <= 1) return;
+
+            // Previous button
+            const prevBtn = document.createElement('button');
+            prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i> Prev';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.onclick = () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    displayStudents();
+                }
+            };
+            paginationDiv.appendChild(prevBtn);
+
+            // Page info
+            const pageInfo = document.createElement('span');
+            pageInfo.textContent = `Halaman ${currentPage} dari ${totalPages} (${totalStudents} data)`;
+            paginationDiv.appendChild(pageInfo);
+
+            // Next button
+            const nextBtn = document.createElement('button');
+            nextBtn.innerHTML = 'Next <i class="fas fa-chevron-right"></i>';
+            nextBtn.disabled = currentPage === totalPages;
+            nextBtn.onclick = () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    displayStudents();
+                }
+            };
+            paginationDiv.appendChild(nextBtn);
+        }
+
+        // Update statistics - UPDATED
+        function updateStatistics() {
+            const total = students.length;
+            const lakiLakiCount = students.filter(s => s.jenisKelamin === 'Laki-laki').length;
+            const perempuanCount = students.filter(s => s.jenisKelamin === 'Perempuan').length;
+
+            document.getElementById('totalPendaftar').textContent = total;
+            document.getElementById('lakiLaki').textContent = lakiLakiCount;
+            document.getElementById('perempuan').textContent = perempuanCount;
+
+            // Update data integrity percentage
+            const integrityPercentage = backupManager.verifyDataIntegrity(students) ? '100%' : '99%';
+            document.getElementById('dataIntegrity').textContent = integrityPercentage;
+
+            // School statistics
+            const schoolStats = {};
+            students.forEach(student => {
+                schoolStats[student.asalSekolah] = (schoolStats[student.asalSekolah] || 0) + 1;
+            });
+
+            const schoolStatsDiv = document.getElementById('schoolStats');
+            if (total > 0) {
+                const sortedSchools = Object.entries(schoolStats)
+                    .sort(([, a], [, b]) => b - a)
+                    .slice(0, 5);
+
+                schoolStatsDiv.innerHTML = `
+                    <div style="margin-bottom: 15px;">
+                        <strong>Top 5 Asal Sekolah:</strong>
+                    </div>
+                    ${sortedSchools.map(([school, count], index) => `
+                        <div style="margin: 8px 0; padding: 8px; background: rgba(76, 175, 80, 0.1); border-radius: 8px; display: flex; justify-content: space-between;">
+                            <span>${index + 1}. ${school}</span>
+                            <strong>${count} siswa</strong>
+                        </div>
+                    `).join('')}
+                    <div style="margin-top: 15px; padding: 10px; background: rgba(30, 60, 114, 0.1); border-radius: 8px;">
+                        <strong>Rasio Gender:</strong><br>
+                        Laki-laki: ${((lakiLakiCount / total) * 100).toFixed(1)}%<br>
+                        Perempuan: ${((perempuanCount / total) * 100).toFixed(1)}%
+                    </div>
+                `;
+            } else {
+                schoolStatsDiv.innerHTML = '<p>Belum ada data pendaftaran</p>';
+            }
+        }
+
+        // Show page - UPDATED
+        function showPage(pageName) {
+            // Update navigation
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+
+            document.querySelector(`[onclick="showPage('${pageName}')"]`).classList.add('active');
+            document.getElementById(pageName).classList.add('active');
+
+            // Reset pagination when switching pages
+            currentPage = 1;
+
+            // Refresh data when showing list or stats
+            if (pageName === 'list') {
+                displayStudents();
+            } else if (pageName === 'stats') {
+                updateStatistics();
+            }
+        }
+
+        // Search functionality - NEW
+        function initializeSearch() {
+            const searchInput = document.getElementById('searchInput');
+            let searchTimeout;
+
+            searchInput.addEventListener('input', function () {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    currentPage = 1; // Reset to first page
+                    displayStudents();
+                }, 300); // Debounce search
+            });
+        }
+
+        // Export to Excel - UPDATED
+        function exportToExcel() {
+            if (students.length === 0) {
+                showToast('Tidak ada data untuk diekspor!', 'warning');
+                return;
+            }
+
+            try {
+                const exportData = students.map((student, index) => ({
+                    'No': index + 1,
+                    'Nama Lengkap': student.nama,
+                    'Jenis Kelamin': student.jenisKelamin,
+                    'Tempat Lahir': student.tempatLahir,
+                    'Tanggal Lahir': formatDate(student.tanggalLahir),
+                    'Alamat': student.alamat,
+                    'Nama Orang Tua/Wali': student.namaOrtu,
+                    'No. HP Orang Tua': student.hpOrtu,
+                    'Asal Sekolah': student.asalSekolah,
+                    'NISN': student.nisn,
+                    'Tanggal Daftar': formatDate(student.tanggalDaftar)
+                }));
+
+                const ws = XLSX.utils.json_to_sheet(exportData);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Data Pendaftar");
+
+                // Auto-resize columns
+                const max_width = exportData.reduce((w, r) => Math.max(w, r['Nama Lengkap'].length), 10);
+                ws["!cols"] = [
+                    { width: 5 },  // No
+                    { width: Math.min(max_width, 30) }, // Nama
+                    { width: 15 }, // Jenis Kelamin
+                    { width: 20 }, // Tempat Lahir
+                    { width: 15 }, // Tanggal Lahir
+                    { width: 30 }, // Alamat
+                    { width: 25 }, // Nama Ortu
+                    { width: 15 }, // HP
+                    { width: 25 }, // Asal Sekolah
+                    { width: 12 }, // NISN
+                    { width: 15 }  // Tanggal Daftar
+                ];
+
+                const fileName = `Data_Pendaftar_SMP_Muslimin_${new Date().toISOString().split('T')[0]}.xlsx`;
+                XLSX.writeFile(wb, fileName);
+
+                showToast(`Data berhasil diekspor ke ${fileName}!`, 'success');
+            } catch (error) {
+                console.error('Export failed:', error);
+                showToast('Gagal mengekspor data!', 'error');
+            }
+        }
+
+        // Export to JSON - UPDATED
+        function exportToJSON() {
+            if (students.length === 0) {
+                showToast('Tidak ada data untuk diekspor!', 'warning');
+                return;
+            }
+
+            const exportData = {
+                exportDate: new Date().toISOString(),
+                totalStudents: students.length,
+                version: '1.0',
+                checksum: backupManager.calculateChecksum(students),
+                data: students
+            };
+
+            const jsonStr = JSON.stringify(exportData, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Backup_SMP_Muslimin_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('Backup JSON berhasil dibuat!', 'success');
+        }
+
+        // Handle file upload - UPDATED
+        function handleUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const importData = JSON.parse(e.target.result);
+
+                    // Validate import data
+                    if (!importData.data || !Array.isArray(importData.data)) {
+                        throw new Error('Format data tidak valid');
+                    }
+
+                    // Verify checksum if available
+                    if (importData.checksum) {
+                        const calculatedChecksum = backupManager.calculateChecksum(importData.data);
+                        if (calculatedChecksum !== importData.checksum) {
+                            throw new Error('Data integrity check failed');
+                        }
+                    }
+
+                    if (confirm(`Ditemukan ${importData.data.length} data siswa.\n\nImport akan menggabungkan dengan data yang ada.\nLanjutkan?`)) {
+                        // Merge with existing data
+                        const existingNames = new Set(students.map(s => s.nama.toLowerCase()));
+                        const newStudents = importData.data.filter(s => !existingNames.has(s.nama.toLowerCase()));
+
+                        if (newStudents.length === 0) {
+                            showToast('Tidak ada data baru untuk diimpor!', 'warning');
+                            return;
+                        }
+
+                        // Assign new IDs and add timestamp
+                        newStudents.forEach(student => {
+                            student.id = 'STD' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                            student.version = 1;
+                            if (!student.tanggalDaftar) {
+                                student.tanggalDaftar = new Date().toISOString().split('T')[0];
+                            }
+                        });
+
+                        students = students.concat(newStudents);
+
+                        if (saveStudents()) {
+                            displayStudents();
+                            updateStatistics();
+                            showToast(`Berhasil mengimpor ${newStudents.length} data baru!`, 'success');
+
+                            // Create backup after import
+                            backupManager.createAutoBackup(students);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Import failed:', error);
+                    showToast('Gagal mengimpor data: ' + error.message, 'error');
+                }
+            };
+
+            reader.readAsText(file);
+            // Reset file input
+            event.target.value = '';
+        }
+
+        // Emergency backup function - NEW
+        function createEmergencyBackup() {
+            if (students.length === 0) {
+                showToast('Tidak ada data untuk dibackup!', 'warning');
+                return;
+            }
+
+            backupManager.createEmergencyBackup(students);
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function () {
+            // 1. INISIALISASI DASAR
+            initPasswordToggle();
+            initializeSearch();
+
+            // 2. PASTIKAN HALAMAN LOGIN YANG MUNCUL PERTAMA
+            document.getElementById('loginPage').style.display = 'block'; // <-- GANTI KE 'flex' atau 'block'
+            document.getElementById('appContainer').style.display = 'none';
+
+            // 3. BIND EVENT FORM
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            document.getElementById('studentForm').addEventListener('submit', handleStudentForm);
+
+            console.log('🔥 System initialized - Login page ready!');
+        });
     </script>
 </body>
+
 </html>
